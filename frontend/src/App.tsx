@@ -555,13 +555,13 @@ function VoicePage() {
   const processWithNemotron = async (userMessage: string) => {
     setOrbState('thinking');
     setStatusText('Thinking... (Nemotron processing)');
-    setAgentTimeline(prev => [
+    setAgentTimeline((prev: AgentActivity[]): AgentActivity[] => [
       ...prev,
       {
         id: `intake-${Date.now()}`,
         agent: 'Intake Agent',
         label: 'Understanding your message',
-        status: 'thinking',
+        status: 'thinking' as const,
       },
     ]);
 
@@ -589,13 +589,13 @@ function VoicePage() {
       const forceCrisis = Boolean(data.force_crisis);
       const skipPrivacyPrompt = Boolean(data.skip_privacy_prompt);
 
-      setAgentTimeline(prev => {
+      setAgentTimeline((prev: AgentActivity[]): AgentActivity[] => {
         const updated = prev.map(item =>
           item.agent === 'Intake Agent' && item.status !== 'done'
             ? {
                 ...item,
-                status: 'done',
-                label: forceCrisis ? 'Emergency flagged—escalating to crisis support' : 'Intake updated',
+                status: 'done' as const,
+                label: forceCrisis ? 'Emergency flagged-escalating to crisis support' : 'Intake updated',
               }
             : item
         );
@@ -606,7 +606,7 @@ function VoicePage() {
               id: `coordinator-${Date.now()}`,
               agent: 'Coordinator',
               label: 'Routing directly to Crisis Agent',
-              status: 'tool',
+              status: 'tool' as const,
             },
           ];
         }
@@ -630,10 +630,10 @@ function VoicePage() {
       console.error('API error:', err);
       setOrbState('idle');
       setStatusText('Connection error. Please check the backend.');
-      setAgentTimeline(prev =>
+      setAgentTimeline((prev: AgentActivity[]): AgentActivity[] =>
         prev.map(item =>
           item.agent === 'Intake Agent' && item.status !== 'done'
-            ? { ...item, status: 'done', label: 'Intake unavailable' }
+            ? { ...item, status: 'done' as const, label: 'Intake unavailable' }
             : item
         )
       );
@@ -663,13 +663,13 @@ function VoicePage() {
   const runInternalRiskAnalysis = async (tier: PrivacyTier) => {
     setStage('assessment');
     setStatusText('Analyzing your needs...');
-    setAgentTimeline(prev => [
+    setAgentTimeline((prev: AgentActivity[]): AgentActivity[] => [
       ...prev,
       {
         id: `crisis-${Date.now()}`,
         agent: 'Crisis Agent',
         label: 'Assessing urgency',
-        status: 'thinking',
+        status: 'thinking' as const,
       },
     ]);
 
@@ -700,10 +700,10 @@ function VoicePage() {
       setOrbState('idle');
       addMessage('agent', message);
       speakResponse(message);
-      setAgentTimeline(prev =>
+      setAgentTimeline((prev: AgentActivity[]): AgentActivity[] =>
         prev.map(item =>
           item.agent === 'Crisis Agent' && item.status !== 'done'
-            ? { ...item, status: 'done', label: 'Risk evaluated' }
+            ? { ...item, status: 'done' as const, label: 'Risk evaluated' }
             : item
         )
       );
@@ -712,10 +712,10 @@ function VoicePage() {
       setStage('privacy');
       setIsPrivacySelectionNeeded(true);
       setStatusText('Something went wrong. Please choose a privacy level again.');
-      setAgentTimeline(prev =>
+      setAgentTimeline((prev: AgentActivity[]): AgentActivity[] =>
         prev.map(item =>
           item.agent === 'Crisis Agent' && item.status !== 'done'
-            ? { ...item, status: 'done', label: 'Risk check failed' }
+            ? { ...item, status: 'done' as const, label: 'Risk check failed' }
             : item
         )
       );
@@ -744,13 +744,13 @@ function VoicePage() {
     const message = `Perfect. I’ve sent an invitation for ${slot}. I’ll let you know as soon as they confirm.`;
     addMessage('agent', message);
     speakResponse(message);
-    setAgentTimeline(prev => [
+    setAgentTimeline((prev: AgentActivity[]): AgentActivity[] => [
       ...prev,
       {
         id: `resource-${Date.now()}`,
         agent: 'Resource Agent',
         label: `Reaching out for ${slot}`,
-        status: 'tool',
+        status: 'tool' as const,
       },
     ]);
 
@@ -762,10 +762,10 @@ function VoicePage() {
       speakResponse(confirmMessage);
       setStage('post_match');
       setStatusText('Choose to share how you’re feeling or explore quick habit ideas.');
-      setAgentTimeline(prev =>
+      setAgentTimeline((prev: AgentActivity[]): AgentActivity[] =>
         prev.map(item =>
           item.agent === 'Resource Agent' && item.status !== 'done'
-            ? { ...item, status: 'done', label: 'Invite sent' }
+            ? { ...item, status: 'done' as const, label: 'Invite sent' }
             : item
         )
       );

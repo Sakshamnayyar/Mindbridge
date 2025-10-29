@@ -1,30 +1,31 @@
 import { useState, useEffect, useRef } from 'react';
 
-const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+// Use loose typing to support browsers without Web Speech types during build
+const SR: any = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
 
 export const useVoiceRecorder = (onResult: (result: string) => void) => {
   const [isListening, setIsListening] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const recognition = useRef<SpeechRecognition | null>(null);
+  const recognition = useRef<any>(null);
 
   useEffect(() => {
-    if (!SpeechRecognition) {
+    if (!SR) {
       setError('Speech recognition is not supported in this browser.');
       return;
     }
 
-    recognition.current = new SpeechRecognition();
+    recognition.current = new SR();
     recognition.current.continuous = false;
     recognition.current.interimResults = false;
     recognition.current.lang = 'en-US';
 
-    recognition.current.onresult = (event) => {
+    recognition.current.onresult = (event: any) => {
       const speechResult = event.results[0][0].transcript;
       onResult(speechResult);
       stopListening();
     };
 
-    recognition.current.onerror = (event) => {
+    recognition.current.onerror = (event: any) => {
       if (event.error === 'aborted') {
         setIsListening(false);
         return;
