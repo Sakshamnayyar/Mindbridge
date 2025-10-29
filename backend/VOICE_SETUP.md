@@ -3,7 +3,7 @@
 ## The Network Error Issue
 
 The "network" error happens because:
-1. Chrome's Web Speech API requires internet connection to Google's servers
+1. Chrome's Web Speech API requires inernet connection to Google's servers
 2. It needs HTTPS (not HTTP) for security
 3. Browser extensions can interfere
 

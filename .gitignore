@@ -8,5 +8,4 @@ ui/node_modules/
 ui/dist/
 tests/
 *.html
-frontend/
 test_*.py
