@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 
-const API_URL = 'http://localhost:8000';
+// Use the same env-based API URL as the rest of the app
+const API_URL = import.meta.env.VITE_API_URL || '';
 
 const SPECIALIZATION_OPTIONS = [
   'anxiety',
